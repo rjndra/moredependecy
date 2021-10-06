@@ -26,8 +26,8 @@ protocol DownloadURLAPIRequest {
     func parseErrorResponse(status: Int, data: Any) -> String
 }
 
-class DownloadURLRequestLoader<T: DownloadURLAPIRequest> {
-    
+class DownloadURLRequestLoader<T: DownloadURLAPIRequest>: NSObject, URLSessionDownloadDelegate {
+
     let apiRequest: T
     let manager: APIRequestState
     
@@ -42,6 +42,20 @@ class DownloadURLRequestLoader<T: DownloadURLAPIRequest> {
             failure("The internet connection appears to be offline.")
             return
         }
+        
+        do {
+            let urlReqest = try self.apiRequest.makeDownloadURLRequest(from: requestData, requestState: manager)
+            let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+            let task = session.downloadTask(with: urlReqest) { (tempFileUrl, urlResponse, error) in
+                
+            }
+            
+            task.resume()
+        } catch let error {
+            let error = self.apiRequest.parseErrorResponse(status: 0, data: error)
+            failure(error)
+        }
+        
         
 //        do {
 //            let request = try self.apiRequest.makeRequest(from: requestData, requestState: manager)
@@ -77,6 +91,17 @@ class DownloadURLRequestLoader<T: DownloadURLAPIRequest> {
 //        }
     }
     
+    // For progress handler
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        
+    }
+    
+    // For destication url
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        
+    }
+    
+    
 }
 
 
@@ -85,25 +110,6 @@ class DataDownloadAPIRequest<T: Mappable> : DownloadURLAPIRequest {
     
     typealias RequestDataType = DownloadURLRequestModel
     
-//    func makeRequest(from data: DownloadRequestModel, requestState: APIRequestState) throws -> DownloadRequest {
-//        APIManager.shared.state = requestState
-//        let request = APIManager.shared.download(data.url, method: data.method, parameters: data.parameters, encoding: data.encoding, headers: data.headers, destination: data.destination, requiresAuthorization: data.requiresAuthorization)
-//        return request
-//    }
-//
-    
-//    func makeURLRequest(from data: RequestDataType, requestState: APIRequestState) throws -> URLRequest {
-//
-//        var urlRequest = URLRequest(url: URL(string: data.url as! String)!)
-//        urlRequest.httpMethod = data.method
-//        urlRequest.httpBody = try? JSONSerialization.data(withJSONObject: data.parameters, options: data.encodingOptions)
-//
-//        if urlRequest.headers["Content-Type"] == nil {
-//            urlRequest.headers.update(.contentType("application/json"))
-//        }
-//
-//        return urlRequest
-//    }
     
     func makeDownloadURLRequest(from data: RequestDataType, requestState: APIRequestState) throws -> URLRequest {
         
