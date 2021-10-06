@@ -53,6 +53,7 @@
 		547835D2270D4492008DE488 /* FontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547D8A54270C60760024659B /* FontStyle.swift */; };
 		547835D3270D4495008DE488 /* Material+TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547D8A4D270C5CF50024659B /* Material+TextField.swift */; };
 		547835D4270D4496008DE488 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547D8A78270C9F990024659B /* Colors.swift */; };
+		547835D6270DE402008DE488 /* NormalDataDownloadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547835D5270DE402008DE488 /* NormalDataDownloadRequest.swift */; };
 		547D8A18270BF8C50024659B /* LoginSuccess.json in Resources */ = {isa = PBXBuildFile; fileRef = 547D8A17270BF8C50024659B /* LoginSuccess.json */; };
 		547D8A1A270BF8EA0024659B /* LoginFailure.json in Resources */ = {isa = PBXBuildFile; fileRef = 547D8A19270BF8EA0024659B /* LoginFailure.json */; };
 		547D8A1C270BF91E0024659B /* LoginDeviceNotVerified.json in Resources */ = {isa = PBXBuildFile; fileRef = 547D8A1B270BF91E0024659B /* LoginDeviceNotVerified.json */; };
@@ -125,6 +126,7 @@
 /* Begin PBXFileReference section */
 		2F678FA8FEBE1A7D2D265EC8 /* Pods-More DependencyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-More DependencyTests.debug.xcconfig"; path = "Target Support Files/Pods-More DependencyTests/Pods-More DependencyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		42D5BB357C75C0EF8A309ACB /* Pods_More_Dependency.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_More_Dependency.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		547835D5270DE402008DE488 /* NormalDataDownloadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalDataDownloadRequest.swift; sourceTree = "<group>"; };
 		547D8A17270BF8C50024659B /* LoginSuccess.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LoginSuccess.json; sourceTree = "<group>"; };
 		547D8A19270BF8EA0024659B /* LoginFailure.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LoginFailure.json; sourceTree = "<group>"; };
 		547D8A1B270BF91E0024659B /* LoginDeviceNotVerified.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LoginDeviceNotVerified.json; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				547D8A47270C1EB30024659B /* UserDefaultsManager.swift */,
 				547D8A49270C1F590024659B /* NetworkUtilities.swift */,
 				547D8A4B270C1F8A0024659B /* JSONExtension.swift */,
+				547835D5270DE402008DE488 /* NormalDataDownloadRequest.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -693,6 +696,7 @@
 				547D8A57270C64970024659B /* UIFont+Extension.swift in Sources */,
 				547D8A6A270C6B050024659B /* UploadRequestLoader.swift in Sources */,
 				547D8A6D270C6D270024659B /* APIManagerDataRequest.swift in Sources */,
+				547835D6270DE402008DE488 /* NormalDataDownloadRequest.swift in Sources */,
 				547D8A48270C1EB30024659B /* UserDefaultsManager.swift in Sources */,
 				547D8A32270BFF720024659B /* GlobalProperties.swift in Sources */,
 				547D8A77270C965E0024659B /* Reachability.swift in Sources */,
