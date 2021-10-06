@@ -1,0 +1,5 @@
+{
+    "status": "error",
+    "message": "Invalid user credentials.",
+    "statusCode": 401
+}

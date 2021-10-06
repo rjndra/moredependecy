@@ -1,0 +1,32 @@
+{
+    "status": "success",
+    "message": "Successfully Logged In",
+    "statusCode": 200,
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiNjM2ZDg4NjY5NjczZjgwZjRiOTQ3ZmIzOWZjYTE1MTc4MGU5OWFiM2ZiODI0ZjBhZTg2NTc5NzdiNDI0YzdjYzBlNzA1ZjQ1MmM3OGM1NGUiLCJpYXQiOjE2MzM0MDMxMTEsIm5iZiI6MTYzMzQwMzExMSwiZXhwIjoxNjY0OTM5MTExLCJzdWIiOi12345678wic2NvcGVzIjpbXX0.dENwoeIzG7xUYJ1twYmQqGfW52kW_FlPC3BLkmUSUkeqNJ-4qCBjxb9LOhinajQ3YGP2qMWfkm5KwHH5OKoVuRivhU4MNZ0cPKNsRq_k-uOmcDKO9uf1HLy3IAoCz7GovJYnCMrV2zf1W4UKpWma8iMMW6qBIUQOYWTiWmBdk0NjWyZ0EIT2Hrl14UmRvknzBiYQDG6pJ8VwRo65rJ00po1pSwBEugCPTtxO0Zmi9No7mP0cf5mug9gvASVBFFl5LwfLMW7gE9_knE5wnZ1FWvWXXdyKxMHJFNAvgPwawIDFjcaK-R1rb0qm1ezh6XtpwDqy7ypEEoBXzCo8ko6kpnyA0wDTdckzRyHbjrxAGdkWLgAM0hj5Awwia6Lyp_t0wOFjQjFnSnIRm909N8U-3a72IwNnaud0durYYIQAbJDVifF20EvbhWHeceVsTIb1PHTSgV4oXneXcLK-IGUGToaFjimW1sCbEBG5H_bAlIpLnyULSBRegBpJTAFmTr4E2sxc2sxOrhHhisArVQJTX-r8r1MTKW17zXIhPxRvZ_kVEqmV2yXbsf6FMwqpADS60dK4GcamQlg2QdFvndLtw7ZkyRgGQVGxi0sf7fWpqc9BC-OP4IeMvke63mgjzK-mCqGvnnebuYkVIfHKetv0LpN7_bFAwUHgTbJdrmzrlz8",
+    "user": {
+        "id": 2592,
+        "email": "rjndrakarki@gmail.com",
+        "name": "Rajendra Karki",
+        "phone": "9141181908",
+        "image": "https://anyurl.com/agent_image.php?file=profile_1632978696_jyotsana.png",
+        "deviceid": "DeviceIDIDh",
+        "device_verified": true,
+        "device_verified_at": "2021-10-04 03:00:09",
+        "device_token": "new_10",
+        "last_login": "2021-10-04T14:01:18.000000Z"
+    },
+    "agent": {
+        "agent_id": 605,
+        "is_root": 1
+    },
+    "group": false,
+    "member": false,
+    "type": "A",
+    "token_type": "Bearer",
+    "is_password_strong": 1,
+    "is_email_valid": true,
+    "last_login": "Oct 04, 2021",
+    "is_phone_valid": true,
+    "is_vip": true,
+    "expires_at": "2022-10-04 22:05:11"
+}

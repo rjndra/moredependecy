@@ -1,0 +1,18 @@
+{
+    "status": "error",
+    "message": "Your device is not verified",
+    "statusCode": 401,
+    "user": {
+        "id": 2592,
+        "email": "testrepcts@gmail.com",
+        "name": "Brent k Hartley",
+        "phone": "9842020205",
+        "image": null,
+        "deviceid": "DeviceIDIDhd",
+        "device_verified": false,
+        "device_verified_at": "2021-10-04 03:00:09",
+        "device_token": "new_10",
+        "last_login": "2021-10-04T14:01:18.000000Z"
+    },
+    "is_password_strong": null
+}
