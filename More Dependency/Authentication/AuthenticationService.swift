@@ -54,6 +54,28 @@ class AuthenticationServiceImpl: AuthenticationService {
         }
     }
     
+    func loginDownload(request:Login.Request, success: @escaping (Login.Response) -> (), error: @escaping (Login.Response) -> (), failure: @escaping (String) -> ()) {
+        
+        let urlString: String = Urls.Auth.login.make()
+        
+        let model = DownloadURLRequestModel(
+            url: urlString,
+            method: "GET",
+            destination: nil,
+            requiresAuthorization: true
+        )
+        
+        let request = DataDownloadAPIRequest<Login.Response>()
+        let loader = DownloadURLRequestLoader(apiRequest: request)
+        loader.progressHandler = { progress in
+            
+        }
+        loader.downloadAPIRequest(requestData: model) { (filePathURl, responseUrl) in
+            
+        } failure: { (errorMessage) in
+            failure(errorMessage)
+        }
+    }
   
 }
 

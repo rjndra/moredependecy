@@ -280,6 +280,7 @@
 				547D8A3D270C1B030024659B /* URLProtocol.swift */,
 				547D8A76270C965E0024659B /* Reachability.swift */,
 				547D8A3F270C1D950024659B /* NormalDataRequest.swift */,
+				547835D5270DE402008DE488 /* NormalDataDownloadRequest.swift */,
 				547D8A68270C6AC90024659B /* API Request */,
 				547D8A2C270BFD360024659B /* APIError.swift */,
 				547D8A6B270C6D140024659B /* API Manager */,
@@ -287,7 +288,6 @@
 				547D8A47270C1EB30024659B /* UserDefaultsManager.swift */,
 				547D8A49270C1F590024659B /* NetworkUtilities.swift */,
 				547D8A4B270C1F8A0024659B /* JSONExtension.swift */,
-				547835D5270DE402008DE488 /* NormalDataDownloadRequest.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
