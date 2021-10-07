@@ -20,7 +20,7 @@ struct AlamofireUploadRequestModel {
     var requiresAuthorization: Bool = true
 }
 
-struct MultipleUploadRequestModel {
+struct AlamofireMultipleUploadRequestModel {
     var url: URLConvertible
     var method: HTTPMethod = .post
     var localPaths: [String]
