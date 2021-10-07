@@ -25,7 +25,7 @@ extension Urls {
 
 protocol AuthenticationService {
     func login(request:Login.Request, success: @escaping (Login.Response) -> (), error: @escaping (Login.Response) -> (), failure: @escaping (String) -> ())
-    
+    func downloadFile(url:String, destinationPath:String, progressHandler: @escaping ((Double) -> ()), success: @escaping (_ filePathURL: URL) -> (), failure: @escaping (String) -> ())
 }
 
 class AuthenticationServiceImpl: AuthenticationService {
@@ -54,28 +54,27 @@ class AuthenticationServiceImpl: AuthenticationService {
         }
     }
     
-    func loginDownload(request:Login.Request, success: @escaping (Login.Response) -> (), error: @escaping (Login.Response) -> (), failure: @escaping (String) -> ()) {
+    func downloadFile(url:String, destinationPath:String, progressHandler: @escaping ((Double) -> ()), success: @escaping (_ filePathURL: URL) -> (), failure: @escaping (String) -> ()) {
         
-        let urlString: String = Urls.Auth.login.make()
+        let urlString: String = url
         
         let model = DownloadRequestModel(
             url: urlString,
             method: "GET",
-            destination: nil,
+            destination: destinationPath,
             requiresAuthorization: true
         )
         
         let request = DownloadURLRequest<Login.Response>()
-        let loader = DownloadURLRequestLoader(apiRequest: request)
-        loader.progressHandler = { progress in
-            
+        let loader = DownloadURLRequestLoader(apiRequest: request, progressHandler: progressHandler)
+        loader.success = { (filePathUrl) in
+            print(filePathUrl.absoluteString)
+            success(filePathUrl)
         }
-        loader.downloadAPIRequest(requestData: model) { (filePathURl, responseUrl) in
-            print(filePathURl.absoluteString)
-            print(responseUrl.absoluteString)
-        } failure: { (errorMessage) in
+        loader.failure = { (errorMessage) in
             failure(errorMessage)
         }
+        loader.downloadAPIRequest(requestData: model)
     }
   
 }

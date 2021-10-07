@@ -135,7 +135,8 @@ class NormalDataRequestLoader<T: DataRequestProtocol>: NSObject {
                             let error = self.apiRequest.parseFailureResponse(status: 0, data: error)
                             failure(error)
                         }
-                    }
+                    } //: 200..<300
+                    
                     else if (400..<500).contains(statusCode) {
                         do {
                             let parsedData = try self.apiRequest.parseErrorResponse(data: json)
@@ -144,11 +145,12 @@ class NormalDataRequestLoader<T: DataRequestProtocol>: NSObject {
                             let error = self.apiRequest.parseFailureResponse(status: 0, data: error)
                             failure(error)
                         }
-                    }
+                    } //: 400..<500
+                    
                     else {
                         let parsedData = self.apiRequest.parseFailureResponse(status: statusCode, data: json)
                         failure(parsedData)
-                    }
+                    } //
                     
                 } catch let errorData {
                     print(errorData.localizedDescription)

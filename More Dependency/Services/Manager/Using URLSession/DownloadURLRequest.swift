@@ -23,7 +23,7 @@ protocol DownloadRequestProtocol {
     var destination:String? { get set }
     
     func makeRequest(from data: RequestDataType, requestState: APIRequestState) throws -> URLRequest
-    func fileDestination() -> String?
+    func destinationURL() -> URL?
     func parseErrorResponse(status: Int, data: Any) -> String
 }
 
@@ -40,7 +40,7 @@ class DownloadURLRequest<T: Mappable> : DownloadRequestProtocol {
         urlRequest.httpMethod = data.method
         
         if let params = data.parameters {
-            let body = try? JSONSerialization.data(withJSONObject: params, options: data.encoding)
+            let body = try JSONSerialization.data(withJSONObject: params, options: data.encoding)
             urlRequest.httpBody = body
         }
         
@@ -63,8 +63,12 @@ class DownloadURLRequest<T: Mappable> : DownloadRequestProtocol {
         return urlRequest
     }
     
-    func fileDestination() -> String? {
-        return self.destination
+    func destinationURL() -> URL? {
+        guard let path = self.destination else {
+            return nil
+        }
+        let destinationURL = URL(fileURLWithPath: path, isDirectory: false)
+        return destinationURL
     }
     
     func parseErrorResponse(status: Int, data: Any) -> String {
@@ -78,61 +82,93 @@ class DownloadURLRequestLoader<T: DownloadRequestProtocol>: NSObject, URLSession
     let apiRequest: T
     let manager: APIRequestState
     
-    var progressHandler: ((Double) -> ())?
+    var progress: ((Double) -> ())
+    var success: ((URL) -> ())?
+    var failure: ((String) -> ())?
     
-    init(apiRequest: T, session: APIRequestState = .live) {
+    private let config = URLSessionConfiguration.background(withIdentifier: "\(Bundle.main.bundleIdentifier!).background")
+    private lazy var urlSession:URLSession = URLSession(configuration: config, delegate: self, delegateQueue: .main)
+    
+    private var downloadTask: URLSessionDownloadTask!
+    
+    init(apiRequest: T, progressHandler: @escaping ((Double) -> ()), session: APIRequestState = .live) {
         self.apiRequest = apiRequest
         self.manager = session
+        self.progress = progressHandler
     }
     
-    func downloadAPIRequest(requestData: T.RequestDataType, success: @escaping ((URL, URL)) -> Void, failure: @escaping (String) -> Void) {
+    func downloadAPIRequest(requestData: T.RequestDataType) {
         
         if !Reachability.isConnectedToNetwork() {
-            failure("The internet connection appears to be offline.")
+            failure?("The internet connection appears to be offline.")
             return
         }
         
         do {
             let urlReqest = try self.apiRequest.makeRequest(from: requestData, requestState: manager)
-            let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
-            let task = session.downloadTask(with: urlReqest) { (tempFileUrl, response, error) in
-                
-                if let error = error {
-                    failure(error.localizedDescription)
-                    return
-                }
-                
-                if let dataTempUrl = tempFileUrl, let reponseUrl = response?.url {
-                    success((dataTempUrl, reponseUrl))
-                } else {
-                    failure("Unable to download")
-                }
-            }
-            
-            task.resume()
+            let downloadTask = urlSession.downloadTask(with: urlReqest)
+            self.downloadTask = downloadTask
+            downloadTask.resume()
         } catch let error {
             let error = self.apiRequest.parseErrorResponse(status: 0, data: error)
-            failure(error)
+            failure?(error)
         }
         
     }
     
     // For progress handler
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        let progressValue = Double(totalBytesWritten/totalBytesExpectedToWrite)
-        progressHandler?(progressValue)
-    }
-    
-    // For destination url
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        
-        guard let path = self.apiRequest.fileDestination() else {
-            return
+           let calculatedProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+        if #available(iOS 11.0, *) {
+            DispatchQueue.main.async {
+                self.progress(downloadTask.progress.fractionCompleted)
+            }
+        } else {
+            // Fallback on earlier versions
+            DispatchQueue.main.async {
+                self.progress(Double(calculatedProgress))
+            }
         }
-        let toURL = URL(fileURLWithPath: path, isDirectory: false)
-        try? FileManager().moveItem(at: location, to: toURL)
     }
     
+    // For task completion
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        if task == self.downloadTask {
+            if let error = error  {
+                failure?(error.localizedDescription)
+            } else if let destination = self.apiRequest.destinationURL() {
+                success?(destination)
+            } else {
+                
+            }
+        }
+    }
+    
+    // For download finish
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        if downloadTask == self.downloadTask {
+            let message = "Download finished: \(location.absoluteString)"
+            print(message)
+            
+            guard let destinationURL = self.apiRequest.destinationURL() else {
+                return
+            }
+            
+            let fileManager = FileManager()
+            
+            // Remove previous file if present
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                try? fileManager.removeItem(at: destinationURL)
+            }
+            
+            // Created intermediate Directories
+            let directory = destinationURL.deletingLastPathComponent()
+            try? fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+            
+            // Move file to given destination Path
+            try? fileManager.moveItem(at: location, to: destinationURL)
+        }
+    }
     
 }
 
