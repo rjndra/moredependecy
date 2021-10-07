@@ -7,6 +7,17 @@
 
 import Alamofire
 
+struct AlamofireUploadRequestModel {
+    var url: URLConvertible
+    var method: HTTPMethod = .post
+    var data: Data?
+    var dataKey:String = "image"
+    var parameters: Parameters? = nil
+    var encoding: ParameterEncoding = URLEncoding.default
+    var headers: HTTPHeaders? = nil
+    var requiresAuthorization: Bool = true
+}
+
 extension APIManager {
     
     open func dataUpload(

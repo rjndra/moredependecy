@@ -64,17 +64,24 @@ class AuthenticationWorker {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let destinationUrl = documentsUrl.appendingPathComponent("/Downloads/\(fileName)")
 
-        if FileManager().fileExists(atPath: destinationUrl.path) {
-            print("File already exists [\(destinationUrl.path)]")
-
-        } else {
+//        if FileManager().fileExists(atPath: destinationUrl.path) {
+//            print("File already exists [\(destinationUrl.path)]")
+//
+//        } else {
             
             self.webService.downloadFile(url: urlString, destinationPath: destinationUrl.path, progressHandler: progress) { filePathURL in
                 success(filePathURL)
             } failure: { (error) in
                 failure(error)
             }
-        }
+            
+            self.webService.downloadFileAlamofire(url: urlString, destinationPath: destinationUrl.path, progressHandler: progress) { filePathURL in
+                success(filePathURL)
+            } failure: { error in
+                failure(error)
+            }
+
+//        }
 
     }
    

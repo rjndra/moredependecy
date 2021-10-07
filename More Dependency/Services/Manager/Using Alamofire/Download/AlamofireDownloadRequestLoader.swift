@@ -6,26 +6,8 @@
 //
 
 import Foundation
-import Alamofire
 
-struct AlamofireDownloadRequestModel {
-    var url: URLConvertible
-    var method: HTTPMethod = .get
-    var parameters: Parameters? = nil
-    var encoding: ParameterEncoding = URLEncoding.default
-    var headers: HTTPHeaders? = nil
-    var destination:DownloadRequest.Destination? = nil
-    var requiresAuthorization: Bool = true
-}
-
-protocol DownloadAPIRequest {
-    associatedtype RequestDataType
-    
-    func makeRequest(from data: RequestDataType, requestState: APIRequestState) throws -> DownloadRequest
-    func parseErrorResponse(status: Int, data: Any) -> String
-}
-
-class DownloadRequestLoader<T: DownloadAPIRequest> {
+class AlamofireDownloadRequestLoader<T: AlamofireDownloadRequestProtocol> {
     
     let apiRequest: T
     let manager: APIRequestState
@@ -35,7 +17,7 @@ class DownloadRequestLoader<T: DownloadAPIRequest> {
         self.manager = session
     }
     
-    func downloadAPIRequest(requestData: T.RequestDataType, progressHandler: @escaping ((Double) -> ()), success: @escaping ((URL, URL)) -> Void, failure: @escaping (String) -> Void) {
+    func downloadAPIRequest(requestData: T.RequestDataType, progressHandler: @escaping ((Double) -> ()), success: @escaping ((URL)) -> Void, failure: @escaping (String) -> Void) {
         
         if !Reachability.isConnectedToNetwork() {
             failure("The internet connection appears to be offline.")
@@ -59,13 +41,13 @@ class DownloadRequestLoader<T: DownloadAPIRequest> {
                         failure(error)
                 }
                 
-                guard let fileURL = response.fileURL, let requestURL = response.request?.url else {
+                guard let fileURL = response.fileURL else {
                     let error = self.apiRequest.parseErrorResponse(status: 0, data: response.result)
                     failure(error)
                     return
                 }
                 let fileURLPath = URL(fileURLWithPath: fileURL.path)
-                let successData = (requestURL, fileURLPath)
+                let successData = (fileURLPath)
                 success(successData)
             })
             

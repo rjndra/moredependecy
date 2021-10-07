@@ -1,11 +1,39 @@
 //
-//  APIManagerDownloadRequest.swift
+//  AlamofireDownloadRequest.swift
 //  More Dependency
 //
-//  Created by Rajendra Karki on 10/5/21.
+//  Created by Rajendra Karki on 07/10/2021.
 //
 
+import Foundation
 import Alamofire
+
+struct AlamofireDownloadRequestModel {
+    var url: URLConvertible
+    var method: HTTPMethod = .get
+    var parameters: Parameters? = nil
+    var encoding: ParameterEncoding = URLEncoding.default
+    var headers: HTTPHeaders? = nil
+    var destination:DownloadRequest.Destination? = nil
+    var requiresAuthorization: Bool = true
+}
+
+class AlamofireDownloadRequest: AlamofireDownloadRequestProtocol {
+    
+    typealias RequestDataType = AlamofireDownloadRequestModel
+    
+    func makeRequest(from data: AlamofireDownloadRequestModel, requestState: APIRequestState) throws -> DownloadRequest {
+        
+        let request = APIManager.shared.download(data.url, destination: data.destination, requiresAuthorization: data.requiresAuthorization)
+        
+        return request
+    }
+    
+    func parseErrorResponse(status: Int, data: Any) -> String {
+        let response = NetworkUtilities().parseResponseError(status: status, data: data)
+        return response
+    }
+}
 
 extension APIManager {
     
@@ -37,3 +65,5 @@ extension APIManager {
     }
     
 }
+
+

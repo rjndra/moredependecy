@@ -1,5 +1,5 @@
 //
-//  UploadURLRequestHelper.swift
+//  UploadRequestHelper.swift
 //  More Dependency
 //
 //  Created by Rajendra Karki on 07/10/2021.
@@ -19,7 +19,7 @@ extension NSMutableData {
     }
 }
 
-struct UploadURLRequestHelper {
+struct UploadRequestHelper {
     
     func convertFileData(fieldName: String, fileName: String, fileData: Data, using boundary: String) -> Data {
         let data = NSMutableData()

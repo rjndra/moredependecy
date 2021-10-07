@@ -7,6 +7,17 @@
 
 import Alamofire
 
+
+struct AlamofireMultipleUploadRequestModel {
+    var url: URLConvertible
+    var method: HTTPMethod = .post
+    var localPaths: [String]
+    var parameters: Parameters? = nil
+    var encoding: ParameterEncoding = URLEncoding.default
+    var headers: HTTPHeaders? = nil
+    var requiresAuthorization: Bool = true
+}
+
 extension APIManager {
     
     open func multipleDataUpload(
