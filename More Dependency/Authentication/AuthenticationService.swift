@@ -35,14 +35,14 @@ class AuthenticationServiceImpl: AuthenticationService {
         
         let urlString: String = Urls.Auth.login.make()
         
-        let model = DataRequestModel(
+        let model = AlamofireDataRequestModel(
             url: urlString,
             method: .post,
             parameters: request.body(),
             requiresAuthorization: false
         )
         
-        let request = NormalDataRequest<Login.Response,Login.Response>()
+        let request = AlamofireDataRequest<Login.Response,Login.Response>()
         let loader = DataRequestLoader(apiRequest: request)
         
         loader.loadAPIRequest(requestData: model) { (response) in
@@ -58,20 +58,21 @@ class AuthenticationServiceImpl: AuthenticationService {
         
         let urlString: String = Urls.Auth.login.make()
         
-        let model = DownloadURLRequestModel(
+        let model = DownloadRequestModel(
             url: urlString,
             method: "GET",
             destination: nil,
             requiresAuthorization: true
         )
         
-        let request = DataDownloadAPIRequest<Login.Response>()
+        let request = DownloadURLRequest<Login.Response>()
         let loader = DownloadURLRequestLoader(apiRequest: request)
         loader.progressHandler = { progress in
             
         }
         loader.downloadAPIRequest(requestData: model) { (filePathURl, responseUrl) in
-            
+            print(filePathURl.absoluteString)
+            print(responseUrl.absoluteString)
         } failure: { (errorMessage) in
             failure(errorMessage)
         }

@@ -1,5 +1,5 @@
 //
-//  NormalDataDownloadRequest.swift
+//  DownloadURLRequest.swift
 //  More Dependency
 //
 //  Created by Rajendra Karki on 10/6/21.
@@ -8,14 +8,17 @@
 import Foundation
 import ObjectMapper
 
-struct DownloadURLRequestModel {
+struct DownloadRequestModel {
     var url: String
     var method: String = "GET"
+    var parameters: [String:Any]? = nil
+    var encoding:JSONSerialization.WritingOptions = []
+    var headers: [String:String]? = nil
     var destination: String? = nil
     var requiresAuthorization: Bool = true
 }
 
-protocol DownloadURLAPIRequest {
+protocol DownloadRequestProtocol {
     associatedtype RequestDataType
     var destination:String? { get set }
     
@@ -24,11 +27,11 @@ protocol DownloadURLAPIRequest {
     func parseErrorResponse(status: Int, data: Any) -> String
 }
 
-class DataDownloadAPIRequest<T: Mappable> : DownloadURLAPIRequest {
+class DownloadURLRequest<T: Mappable> : DownloadRequestProtocol {
     
     internal var destination: String?
     
-    typealias RequestDataType = DownloadURLRequestModel
+    typealias RequestDataType = DownloadRequestModel
     
     func makeRequest(from data: RequestDataType, requestState: APIRequestState) throws -> URLRequest {
         
@@ -36,8 +39,25 @@ class DataDownloadAPIRequest<T: Mappable> : DownloadURLAPIRequest {
         var urlRequest = URLRequest(url: URL(string: data.url)!)
         urlRequest.httpMethod = data.method
         
+        if let params = data.parameters {
+            let body = try? JSONSerialization.data(withJSONObject: params, options: data.encoding)
+            urlRequest.httpBody = body
+        }
+        
+        urlRequest.updateHeader()
+        if let header = data.headers {
+            for (index,value) in header {
+                urlRequest.setValue(value, forHTTPHeaderField: index)
+            }
+        }
         if urlRequest.headers["Content-Type"] == nil {
             urlRequest.headers.update(.contentType("application/json"))
+        }
+        
+        if data.requiresAuthorization {
+            if let token = AuthCache.AcessToken.get(), let token_type = AuthCache.AccessTokenType.get() {
+                urlRequest.addValue("\(token_type) \(token)", forHTTPHeaderField: "Authorization")
+            }
         }
 
         return urlRequest
@@ -53,7 +73,7 @@ class DataDownloadAPIRequest<T: Mappable> : DownloadURLAPIRequest {
     }
 }
 
-class DownloadURLRequestLoader<T: DownloadURLAPIRequest>: NSObject, URLSessionDownloadDelegate {
+class DownloadURLRequestLoader<T: DownloadRequestProtocol>: NSObject, URLSessionDownloadDelegate {
 
     let apiRequest: T
     let manager: APIRequestState

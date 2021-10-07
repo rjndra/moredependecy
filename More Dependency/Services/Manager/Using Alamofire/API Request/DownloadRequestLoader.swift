@@ -8,6 +8,16 @@
 import Foundation
 import Alamofire
 
+struct AlamofireDownloadRequestModel {
+    var url: URLConvertible
+    var method: HTTPMethod = .get
+    var parameters: Parameters? = nil
+    var encoding: ParameterEncoding = URLEncoding.default
+    var headers: HTTPHeaders? = nil
+    var destination:DownloadRequest.Destination? = nil
+    var requiresAuthorization: Bool = true
+}
+
 protocol DownloadAPIRequest {
     associatedtype RequestDataType
     
