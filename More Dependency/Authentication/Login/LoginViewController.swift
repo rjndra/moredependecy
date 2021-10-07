@@ -46,6 +46,16 @@ class LoginViewController: UIViewController {
         
     }
     
+    @IBAction func downloadVideo(_ sender: UIButton) {
+        AuthenticationWorker().downloadAndSaveVideo { progress in
+            print("Progress: \(progress)")
+        } success: { (localPath) in
+            print(("local saved path : \(localPath)"))
+        } failure: { (error) in
+            print(error)
+        }
+    }
+    
     @IBAction func loginAction(_ sender: UIButton) {
         if validate() {
           // Call login api

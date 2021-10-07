@@ -53,6 +53,37 @@ class AuthenticationWorker {
         }
         
     }
+    
+    func downloadAndSaveVideo(progress: @escaping ((Double) -> ()), success: @escaping (URL) -> (), failure: @escaping (String) -> ()) {
+        let urlString = "https://corenroll.com/_pdfdocs/STD-500-HOSPITAL-INDEMNITY-POLICY.pdf"
+        guard let fileURL = URL(string: urlString) else {
+            return
+        }
+        let fileName = fileURL.lastPathComponent
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let destinationUrl = documentsUrl.appendingPathComponent("/Downloads/\(fileName)")
+
+//        if FileManager().fileExists(atPath: destinationUrl.path) {
+//            print("File already exists [\(destinationUrl.path)]")
+//
+//        } else {
+            
+            self.webService.downloadFile(url: urlString, destinationPath: destinationUrl.path, progressHandler: progress) { filePathURL in
+                success(filePathURL)
+            } failure: { (error) in
+                failure(error)
+            }
+            
+            self.webService.downloadFileAlamofire(url: urlString, destinationPath: destinationUrl.path, progressHandler: progress) { filePathURL in
+                success(filePathURL)
+            } failure: { error in
+                failure(error)
+            }
+
+//        }
+
+    }
    
     
 }
